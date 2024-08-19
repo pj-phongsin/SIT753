@@ -15,9 +15,9 @@ pipeline {
             }
             post {
                 success {
-                    mail to: "chokforze@gmail.com,
-                    subject: "Build Status Email",
-                    body: "Build was successful"
+                    mail to: 'chokforze@gmail.com',
+                    subject: 'Build Status Email',
+                    body: 'Build was successful'
                 }
             }
         }
