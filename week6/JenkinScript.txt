@@ -29,7 +29,7 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
+                    mail to: 's224588035@deakin.edu.au',
                     subject: 'Security Scan Status Email',
                     body: 'Security scan successful'
                 }
@@ -42,7 +42,7 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
+                    mail to: 's224588035@deakin.edu.au',
                     subject: 'Test Status Email',
                     body: 'Test successful'
                 }
