@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+    
+    environment {
+        DIRECTORY_PATH = '/path/to/code/directory'
+        TESTING_ENVIRONMENT = 'Testing'
+        PRODUCTION_ENVIRONMENT = 'PJ'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Fetch the source code from the directory path specified by the environment variable'
+                echo 'compile the code and generate any necessary artifacts'
+            }
+            post {
+                success {
+                    mail to: 'chokforze@gmail.com',
+                    subject: 'Build Status Email',
+                    body: 'Build was successful'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Unit tests'
+                echo 'Integration tests'
+            }
+        }
+        stage('Code Quality Check') {
+            steps {
+                echo 'Check the quality of the code'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploy the application to a testing environment specified by the environment variable'
+            }
+        }
+        stage('Aprove') {
+            steps {
+                echo 'Simulate Manual Approval. The pipeline must pause for 10 seconds before continuing'
+                sleep 10
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                echo "Deploying the code to ${env.PRODUCTION_ENVIRONMENT} environment"
+            }
+        }
+    }
+}
