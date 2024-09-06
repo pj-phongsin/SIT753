@@ -20,27 +20,12 @@ pipeline {
         }
         stage('Code Analysis') {
             steps {
-                echo 'Integrate a code analysis tool to analyze the code and ensure it meets industry standards.'
+                echo 'Integrate a code analysis tool to analyse the code and ensure it meets industry standards.'
             }
         }
         stage('Security Scan') {
             steps {
                 echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
-                // Save the console log to a file
-                script {
-                    writeFile file: 'security_scan.log', text: currentBuild.rawBuild.getLog().join("\n")
-                }
-            }
-            post {
-                success {
-                    // Email the log file as an attachment
-                    emailext (
-                        to: 'chokforze@gmail.com',
-                        subject: 'Security Scan Status Email',
-                        body: 'Security scan successful. Please find the log attached.',
-                        attachmentsPattern: 'security_scan.log'
-                    )
-                }
             }
         }
         stage('Integration Tests on Staging') {
@@ -48,18 +33,27 @@ pipeline {
                 echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
                 sleep 10
             }
-            post {
-                success {
-                    mail to: 'chokforze@gmail.com',
-                    subject: 'Test Status Email',
-                    body: 'Test successful'
-                }
-            }
         }
         stage('Deploy to Production') {
             steps {
                 echo 'deploy the application to a production server'
             }
+        }
+    }
+    post {
+        success {
+            // Send success email
+            emailext body: 'The build was successful. Please find the attached log file.',
+                     subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} - Success",
+                     to: 'chokforze@gmail.com',
+                     attachLog: true 
+        }
+        failure {
+            // Send failure email
+            emailext body: 'The build has failed. Please find the attached log file.',
+                     subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} - Failure",
+                     to: 'chokforze@gmail.com',
+                     attachLog: true 
         }
     }
 }
