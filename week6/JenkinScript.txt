@@ -43,17 +43,27 @@ pipeline {
     post {
         success {
             // Send success email
-            emailext body: 'The build was successful. Please find the attached log file.',
-                     subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} - Success",
-                     to: 'chokforze@gmail.com',
-                     attachLog: true 
+            emailext(
+                to: 'chokforze@gmail.com',
+                subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
+                from: 'chokforze@gmail.com',
+                replyTo: 'chokforze@gmail.com',
+                mimeType: 'text/plain',
+                attachLog: true // Attach the build log if needed
+            )
         }
         failure {
             // Send failure email
-            emailext body: 'The build has failed. Please find the attached log file.',
-                     subject: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} - Failure",
-                     to: 'chokforze@gmail.com',
-                     attachLog: true 
+            emailext(
+                to: 'chokforze@gmail.com',
+                subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
+                from: 'chokforze@gmail.com',
+                replyTo: 'chokforze@gmail.com',
+                mimeType: 'text/plain',
+                attachLog: true // Attach the build log if needed
+            )
         }
     }
 }
