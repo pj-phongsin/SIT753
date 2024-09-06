@@ -5,6 +5,7 @@ pipeline {
         DIRECTORY_PATH = '/path/to/code/directory'
         TESTING_ENVIRONMENT = 'Testing'
         PRODUCTION_ENVIRONMENT = 'PJ'
+        LOG_FILE = 'build_logs.txt'  // Log file to store stage logs
     }
 
     stages {
@@ -15,42 +16,76 @@ pipeline {
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Run unit tests to ensure the code functions as expected and run integration tests'
+                script {
+                    sh "echo 'Running unit and integration tests...' | tee ${LOG_FILE}"
+                }
+            }
+            post {
+                success {
+                    emailext to: 'chokforze@gmail.com',
+                            subject: 'Test Status: SUCCESS',
+                            body: 'Unit and Integration Tests were successful.',
+                            attachmentsPattern: "${LOG_FILE}"
+                }
+                failure {
+                    emailext to: 'chokforze@gmail.com',
+                            subject: 'Test Status: FAILURE',
+                            body: 'Unit and Integration Tests failed. Please check the attached logs.',
+                            attachmentsPattern: "${LOG_FILE}"
+                }
             }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Integrate a code analysis tool to analyse the code and ensure it meets industry standards.'
+                echo 'Integrate a code analysis tool to analyze the code and ensure it meets industry standards.'
             }
         }
         stage('Security Scan') {
             steps {
-                echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
+                script {
+                    sh "echo 'Performing security scan...' | tee ${LOG_FILE}"
+                }
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
-                    subject: 'Security Scan Status Email',
-                    body: 'Security scan successful'
+                    emailext to: 'chokforze@gmail.com',
+                            subject: 'Security Scan Status: SUCCESS',
+                            body: 'Security scan was successful.',
+                            attachmentsPattern: "${LOG_FILE}"
+                }
+                failure {
+                    emailext to: 'chokforze@gmail.com',
+                            subject: 'Security Scan Status: FAILURE',
+                            body: 'Security scan failed. Please check the attached logs.',
+                            attachmentsPattern: "${LOG_FILE}"
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
-                sleep 10
+                script {
+                    sh "echo 'Running integration tests on staging environment...' | tee ${LOG_FILE}"
+                    sleep 10
+                }
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
-                    subject: 'Test Status Email',
-                    body: 'Test successful'
+                    emailext to: 'chokforze@gmail.com',
+                            subject: 'Integration Test Status: SUCCESS',
+                            body: 'Integration tests on staging environment were successful.',
+                            attachmentsPattern: "${LOG_FILE}"
+                }
+                failure {
+                    emailext to: 'chokforze@gmail.com',
+                            subject: 'Integration Test Status: FAILURE',
+                            body: 'Integration tests on staging environment failed. Please check the attached logs.',
+                            attachmentsPattern: "${LOG_FILE}"
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'deploy the application to a production server'
+                echo 'Deploy the application to a production server'
             }
         }
     }
