@@ -5,7 +5,6 @@ pipeline {
         DIRECTORY_PATH = '/path/to/code/directory'
         TESTING_ENVIRONMENT = 'Testing'
         PRODUCTION_ENVIRONMENT = 'PJ'
-        LOG_FILE = 'build_logs.txt'  // Log file to store stage logs
     }
 
     stages {
@@ -16,23 +15,7 @@ pipeline {
         }
         stage('Unit and Integration Tests') {
             steps {
-                script {
-                    sh "echo 'Running unit and integration tests...' | tee ${LOG_FILE}"
-                }
-            }
-            post {
-                success {
-                    emailext to: 'chokforze@gmail.com',
-                            subject: 'Test Status: SUCCESS',
-                            body: 'Unit and Integration Tests were successful.',
-                            attachmentsPattern: "${LOG_FILE}"
-                }
-                failure {
-                    emailext to: 'chokforze@gmail.com',
-                            subject: 'Test Status: FAILURE',
-                            body: 'Unit and Integration Tests failed. Please check the attached logs.',
-                            attachmentsPattern: "${LOG_FILE}"
-                }
+                echo 'Run unit tests to ensure the code functions as expected and run integration tests'
             }
         }
         stage('Code Analysis') {
@@ -42,50 +25,46 @@ pipeline {
         }
         stage('Security Scan') {
             steps {
-                script {
-                    sh "echo 'Performing security scan...' | tee ${LOG_FILE}"
-                }
+                echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
             }
             post {
                 success {
-                    emailext to: 'chokforze@gmail.com',
-                            subject: 'Security Scan Status: SUCCESS',
-                            body: 'Security scan was successful.',
-                            attachmentsPattern: "${LOG_FILE}"
-                }
-                failure {
-                    emailext to: 'chokforze@gmail.com',
-                            subject: 'Security Scan Status: FAILURE',
-                            body: 'Security scan failed. Please check the attached logs.',
-                            attachmentsPattern: "${LOG_FILE}"
+                    script {
+                        def logContent = currentBuild.rawBuild.getLog(50).join("\n") // Get the last 50 lines of the build log
+                        mail to: 'chokforze@gmail.com',
+                        subject: 'Security Scan Status Email',
+                        body: """Security scan successful.
+
+                        Build Log:
+                        ${logContent}
+                        """
+                    }
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                script {
-                    sh "echo 'Running integration tests on staging environment...' | tee ${LOG_FILE}"
-                    sleep 10
-                }
+                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment.'
+                sleep 10
             }
             post {
                 success {
-                    emailext to: 'chokforze@gmail.com',
-                            subject: 'Integration Test Status: SUCCESS',
-                            body: 'Integration tests on staging environment were successful.',
-                            attachmentsPattern: "${LOG_FILE}"
-                }
-                failure {
-                    emailext to: 'chokforze@gmail.com',
-                            subject: 'Integration Test Status: FAILURE',
-                            body: 'Integration tests on staging environment failed. Please check the attached logs.',
-                            attachmentsPattern: "${LOG_FILE}"
+                    script {
+                        def logContent = currentBuild.rawBuild.getLog(50).join("\n") // Get the last 50 lines of the build log
+                        mail to: 'chokforze@gmail.com',
+                        subject: 'Test Status Email',
+                        body: """Test successful.
+
+                        Build Log:
+                        ${logContent}
+                        """
+                    }
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'Deploy the application to a production server'
+                echo 'Deploy the application to a production server.'
             }
         }
     }
