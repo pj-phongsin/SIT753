@@ -33,37 +33,37 @@ pipeline {
                 echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
                 sleep 10
             }
+            post {
+                success {
+                    // Send success email
+                    emailext(
+                        to: 'chokforze@gmail.com',
+                        subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                        body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
+                        from: 'chokforze@gmail.com',
+                        replyTo: 'chokforze@gmail.com',
+                        mimeType: 'text/plain',
+                        attachLog: true // Attach the build log if needed
+                    )
+                }
+                failure {
+                    // Send failure email
+                    emailext(
+                        to: 'chokforze@gmail.com',
+                        subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+                        body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
+                        from: 'chokforze@gmail.com',
+                        replyTo: 'chokforze@gmail.com',
+                        mimeType: 'text/plain',
+                        attachLog: true // Attach the build log if needed
+                    )
+                }
+    }
         }
         stage('Deploy to Production') {
             steps {
                 echo 'deploy the application to a production server'
             }
-        }
-    }
-    post {
-        success {
-            // Send success email
-            emailext(
-                to: 'chokforze@gmail.com',
-                subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
-                body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
-                from: 'chokforze@gmail.com',
-                replyTo: 'chokforze@gmail.com',
-                mimeType: 'text/plain',
-                attachLog: true // Attach the build log if needed
-            )
-        }
-        failure {
-            // Send failure email
-            emailext(
-                to: 'chokforze@gmail.com',
-                subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
-                body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
-                from: 'chokforze@gmail.com',
-                replyTo: 'chokforze@gmail.com',
-                mimeType: 'text/plain',
-                attachLog: true // Attach the build log if needed
-            )
         }
     }
 }
