@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         DIRECTORY_PATH = '/path/to/code/directory'
         TESTING_ENVIRONMENT = 'Testing'
@@ -15,12 +15,12 @@ pipeline {
         }
         stage('Unit and Integration Tests') {
             steps {
-                echo 'Run unit tests to ensure the code functions as expected and run integration tests'
+                echo 'Run unit tests to ensure the code functions as expected and run integration tests.'
             }
         }
         stage('Code Analysis') {
             steps {
-                echo 'Integrate a code analysis tool to analyse the code and ensure it meets industry standards.'
+                echo 'Integrate a code analysis tool to analyze the code and ensure it meets industry standards.'
             }
         }
         stage('Security Scan') {
@@ -48,11 +48,10 @@ pipeline {
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
+                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment.'
                 sleep 10
             }
             post {
-                post {
                 success {
                     mail to: 'chokforze@gmail.com',
                          subject: 'Integration Test Status Email',
@@ -70,11 +69,10 @@ pipeline {
                          ]
                 }
             }
-            }
+        }
         stage('Deploy to Production') {
             steps {
-                echo 'deploy the application to a production server'
-                }
+                echo 'Deploy the application to a production server.'
             }
         }
     }
