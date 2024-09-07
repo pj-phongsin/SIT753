@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    
     environment {
         DIRECTORY_PATH = '/path/to/code/directory'
         TESTING_ENVIRONMENT = 'Testing'
@@ -8,59 +8,51 @@ pipeline {
     }
 
     stages {
+        stage('Build') {
+            steps {
+                echo 'Build the code using a build automation tool.'
+            }
+        }
+        stage('Unit and Integration Tests') {
+            steps {
+                echo 'Run unit tests to ensure the code functions as expected and run integration tests'
+            }
+        }
+        stage('Code Analysis') {
+            steps {
+                echo 'Integrate a code analysis tool to analyse the code and ensure it meets industry standards.'
+            }
+        }
         stage('Security Scan') {
             steps {
                 echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
-                // Simulate creation of a report file
-                writeFile file: 'security-scan-report.zip', text: 'Dummy security scan report'
-                script {
-                    // Save security scan logs
-                    sh "echo 'Security Scan logs' > security_scan.log"
-                }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'security-scan-report.zip, security_scan.log'
-                    emailext attachmentsPattern: 'security_scan.log',
-                             to: 'chokforze@gmail.com',
-                             subject: 'Security Scan Status: Success',
-                             body: 'Security scan successful. Attached is the security scan log.'
-                }
-                failure {
-                    archiveArtifacts artifacts: 'security-scan-report.zip, security_scan.log'
-                    emailext attachmentsPattern: 'security_scan.log',
-                             to: 'chokforze@gmail.com',
-                             subject: 'Security Scan Failed',
-                             body: 'Security scan failed. Attached is the security scan log.'
+                    mail to: 'chokforze@gmail.com',
+                    subject: 'Security Scan Status Email',
+                    body: 'Security scan successful',
+                    attachLog: true
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment.'
-                // Simulate creation of a report file
-                writeFile file: 'integration-test-report.zip', text: 'Dummy integration test report'
+                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
                 sleep 10
-                script {
-                    // Save integration test logs
-                    sh "echo 'Integration Test logs' > integration_test.log"
-                }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'integration-test-report.zip, integration_test.log'
-                    emailext attachmentsPattern: 'integration_test.log',
-                             to: 'chokforze@gmail.com',
-                             subject: 'Integration Test Status: Success',
-                             body: 'Integration tests successful. Attached is the integration test log.'
+                    mail to: 'chokforze@gmail.com',
+                    subject: 'Test Status Email',
+                    body: 'Test successful',
+                    attachLog: true
                 }
-                failure {
-                    archiveArtifacts artifacts: 'integration-test-report.zip, integration_test.log'
-                    emailext attachmentsPattern: 'integration_test.log',
-                             to: 'chokforze@gmail.com',
-                             subject: 'Integration Test Failed',
-                             body: 'Integration tests failed. Attached is the integration test log.'
-                }
+            }
+        }
+        stage('Deploy to Production') {
+            steps {
+                echo 'deploy the application to a production server'
             }
         }
     }
