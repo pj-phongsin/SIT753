@@ -34,7 +34,7 @@ pipeline {
                     body: 'Security scan successful',
                     attachments: [ // Use attachments instead of fileAttach
                     (filename: 'logs.zip', file: zip(workspaceGlob('**/*.log'))) // Zip and attach all log files
-                     ]
+                    ]
                 }
             }
         }
@@ -59,4 +59,5 @@ pipeline {
             }
         }
     }
+}
 }
