@@ -26,47 +26,43 @@ pipeline {
         stage('Security Scan') {
             steps {
                 echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
+                // Simulate creation of a report file
+                writeFile file: 'security-scan-report.zip', text: 'Dummy security scan report'
             }
             post {
                 success {
+                    archiveArtifacts artifacts: 'security-scan-report.zip'
                     mail to: 'chokforze@gmail.com',
                          subject: 'Security Scan Status Email',
-                         body: 'Security scan successful',
-                         attachments: [
-                             archiveArtifacts artifacts: '**/security-scan-report.zip', onlyIfSuccessful: true
-                         ]
+                         body: 'Security scan successful. You can download the report from: ${BUILD_URL}artifact/security-scan-report.zip'
                 }
                 failure {
+                    archiveArtifacts artifacts: 'security-scan-report.zip'
                     mail to: 'chokforze@gmail.com',
                          subject: 'Security Scan Failed',
-                         body: 'Security scan failed. Please review the attached report.',
-                         attachments: [
-                             archiveArtifacts artifacts: '**/security-scan-report.zip'
-                         ]
+                         body: 'Security scan failed. Please review the report at: ${BUILD_URL}artifact/security-scan-report.zip'
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
                 echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment.'
+                // Simulate creation of a report file
+                writeFile file: 'integration-test-report.zip', text: 'Dummy integration test report'
                 sleep 10
             }
             post {
                 success {
+                    archiveArtifacts artifacts: 'integration-test-report.zip'
                     mail to: 'chokforze@gmail.com',
                          subject: 'Integration Test Status Email',
-                         body: 'Integration tests successful',
-                         attachments: [
-                             archiveArtifacts artifacts: '**/integration-test-report.zip', onlyIfSuccessful: true
-                         ]
+                         body: 'Integration tests successful. You can download the report from: ${BUILD_URL}artifact/integration-test-report.zip'
                 }
                 failure {
+                    archiveArtifacts artifacts: 'integration-test-report.zip'
                     mail to: 'chokforze@gmail.com',
                          subject: 'Integration Test Failed',
-                         body: 'Integration tests failed. Please review the attached report.',
-                         attachments: [
-                             archiveArtifacts artifacts: '**/integration-test-report.zip'
-                         ]
+                         body: 'Integration tests failed. Please review the report at: ${BUILD_URL}artifact/integration-test-report.zip'
                 }
             }
         }
