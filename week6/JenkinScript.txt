@@ -33,7 +33,7 @@ pipeline {
                     subject: 'Security Scan Status Email',
                     body: 'Security scan successful',
                     attachments: [ // Use attachments instead of fileAttach
-                    (filename: 'logs.zip', file: zip(workspaceGlob('**/*.log'))) // Zip and attach all log files
+                        (filename: 'logs.zip', file: zip(workspaceGlob('**/*.log'))) // Zip and attach all log files
                     ]
                 }
             }
@@ -46,13 +46,14 @@ pipeline {
             post {
                 success {
                     mail to: 'chokforze@gmail.com',
-                    subject: 'Security Scan Status Email',
-                    body: 'Security scan successful',
+                    subject: 'Test Status Email',
+                    body: 'Test successful',
                     attachments: [ // Use attachments instead of fileAttach
-                    (filename: 'logs.zip', file: zip(workspaceGlob('**/*.log'))) // Zip and attach all log files
-                     ]
+                
+                        (filename: 'logs.zip', file: zip(workspaceGlob('**/*.log'))) // Zip and attach all log files
+                    ]
+                }
             }
-        }
         stage('Deploy to Production') {
             steps {
                 echo 'deploy the application to a production server'
