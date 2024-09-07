@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         DIRECTORY_PATH = '/path/to/code/directory'
         TESTING_ENVIRONMENT = 'Testing'
@@ -29,9 +29,11 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
-                    subject: 'Security Scan Status Email',
-                    body: 'Security scan successful'
+                    emailext (
+                        subject: 'Security Scan Status Email',
+                        body: 'Security scan was successful.',
+                        to: 'chokforze@gmail.com'
+                    )
                 }
             }
         }
@@ -42,15 +44,19 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
-                    subject: 'Test Status Email',
-                    body: 'Test successful'
+                    emailext (
+                        subject: 'Test Status Email',
+                        body: 'Integration tests on staging were successful.',
+                        to: 'chokforze@gmail.com',
+                        attachmentsPattern: '**/build.log', // Example log attachment
+                        attachLog: true  // Attaches the build log automatically
+                    )
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'deploy the application to a production server'
+                echo 'Deploy the application to a production server'
             }
         }
     }
