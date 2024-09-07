@@ -30,11 +30,19 @@ pipeline {
             post {
                 success {
                     mail to: 'chokforze@gmail.com',
-                    subject: 'Security Scan Status Email',
-                    body: 'Security scan successful',
-                    attachments: [ // Use attachments instead of fileAttach
-                        (filename: 'logs.zip', file: zip(workspaceGlob('**/*.log'))) // Zip and attach all log files
-                    ]
+                         subject: 'Security Scan Status Email',
+                         body: 'Security scan successful',
+                         attachments: [
+                             (filename: 'security-scan-report.zip', file: zip(workspaceGlob('**/*')))
+                         ]
+                }
+                failure {
+                    mail to: 'chokforze@gmail.com',
+                         subject: 'Security Scan Failed',
+                         body: 'Security scan failed. Please review the attached report.',
+                         attachments: [
+                             (filename: 'security-scan-report.zip', file: zip(workspaceGlob('**/*')))
+                         ]
                 }
             }
         }
@@ -44,21 +52,30 @@ pipeline {
                 sleep 10
             }
             post {
+                post {
                 success {
                     mail to: 'chokforze@gmail.com',
-                    subject: 'Test Status Email',
-                    body: 'Test successful',
-                    attachments: [ // Use attachments instead of fileAttach
-                
-                        (filename: 'logs.zip', file: zip(workspaceGlob('**/*.log'))) // Zip and attach all log files
-                    ]
+                         subject: 'Integration Test Status Email',
+                         body: 'Integration tests successful',
+                         attachments: [
+                             (filename: 'integration-test-report.zip', file: zip(workspaceGlob('**/*')))
+                         ]
                 }
+                failure {
+                    mail to: 'chokforze@gmail.com',
+                         subject: 'Integration Test Failed',
+                         body: 'Integration tests failed. Please review the attached report.',
+                         attachments: [
+                             (filename: 'integration-test-report.zip', file: zip(workspaceGlob('**/*')))
+                         ]
+                }
+            }
             }
         stage('Deploy to Production') {
             steps {
                 echo 'deploy the application to a production server'
+                }
             }
         }
     }
-}
 }
