@@ -44,7 +44,7 @@ pipeline {
                 success {
                     mail to: 'chokforze@gmail.com',
                     subject: 'Test Status Email',
-                    body: 'Test successful'
+                    body: 'Test successful',
                     attachLog: true
                 }
             }
