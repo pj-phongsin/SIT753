@@ -27,6 +27,13 @@ pipeline {
             steps {
                 echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
             }
+            post {
+                success {
+                    mail to: 'chokforze@gmail.com',
+                    subject: 'Security Scan Status Email',
+                    body: 'Security scan successful'
+                }
+            }
         }
         stage('Integration Tests on Staging') {
             steps {
@@ -35,30 +42,12 @@ pipeline {
             }
             post {
                 success {
-                    // Send success email
-                    emailext(
-                        to: 'chokforze@gmail.com',
-                        subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
-                        body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
-                        from: 'chokforze@gmail.com',
-                        replyTo: 'chokforze@gmail.com',
-                        mimeType: 'text/plain',
-                        attachLog: true // Attach the build log if needed
-                    )
+                    mail to: 'chokforze@gmail.com',
+                    subject: 'Test Status Email',
+                    body: 'Test successful'
+                    attachLog: true
                 }
-                failure {
-                    // Send failure email
-                    emailext(
-                        to: 'chokforze@gmail.com',
-                        subject: "Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
-                        body: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is ${currentBuild.currentResult}\nCheck console output at ${env.BUILD_URL}",
-                        from: 'chokforze@gmail.com',
-                        replyTo: 'chokforze@gmail.com',
-                        mimeType: 'text/plain',
-                        attachLog: true // Attach the build log if needed
-                    )
-                }
-    }
+            }
         }
         stage('Deploy to Production') {
             steps {
