@@ -11,28 +11,31 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Build the code using a build automation tool.'
+                archiveArtifacts artifacts: '**/build.log', allowEmptyArchive: true
             }
         }
         stage('Unit and Integration Tests') {
             steps {
                 echo 'Run unit tests to ensure the code functions as expected and run integration tests'
+                archiveArtifacts artifacts: '**/test-results.log', allowEmptyArchive: true
             }
         }
         stage('Code Analysis') {
             steps {
                 echo 'Integrate a code analysis tool to analyse the code and ensure it meets industry standards.'
+                archiveArtifacts artifacts: '**/code-analysis.log', allowEmptyArchive: true
             }
         }
         stage('Security Scan') {
             steps {
                 echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
+                archiveArtifacts artifacts: '**/security-scan.log', allowEmptyArchive: true
             }
             post {
                 success {
                     mail to: 'chokforze@gmail.com',
                     subject: 'Security Scan Status Email',
-                    body: 'Security scan successful',
-                    attachLog: true
+                    body: 'Security scan successful.\n\nThe log file can be found at: ${env.BUILD_URL}artifact/security-scan.log'
                 }
             }
         }
@@ -40,19 +43,19 @@ pipeline {
             steps {
                 echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
                 sleep 10
+                archiveArtifacts artifacts: '**/staging-tests.log', allowEmptyArchive: true
             }
             post {
                 success {
                     mail to: 'chokforze@gmail.com',
                     subject: 'Test Status Email',
-                    body: 'Test successful',
-                    attachLog: true
+                    body: 'Integration tests on staging successful.\n\nThe log file can be found at: ${env.BUILD_URL}artifact/staging-tests.log'
                 }
             }
         }
         stage('Deploy to Production') {
             steps {
-                echo 'deploy the application to a production server'
+                echo 'Deploy the application to a production server'
             }
         }
     }
