@@ -33,7 +33,7 @@ pipeline {
                          subject: 'Security Scan Status Email',
                          body: 'Security scan successful',
                          attachments: [
-                             (filename: 'security-scan-report.zip', file: zip(workspaceGlob('**/*')))
+                             archiveArtifacts artifacts: '**/security-scan-report.zip', onlyIfSuccessful: true
                          ]
                 }
                 failure {
@@ -41,7 +41,7 @@ pipeline {
                          subject: 'Security Scan Failed',
                          body: 'Security scan failed. Please review the attached report.',
                          attachments: [
-                             (filename: 'security-scan-report.zip', file: zip(workspaceGlob('**/*')))
+                             archiveArtifacts artifacts: '**/security-scan-report.zip'
                          ]
                 }
             }
@@ -57,7 +57,7 @@ pipeline {
                          subject: 'Integration Test Status Email',
                          body: 'Integration tests successful',
                          attachments: [
-                             (filename: 'integration-test-report.zip', file: zip(workspaceGlob('**/*')))
+                             archiveArtifacts artifacts: '**/integration-test-report.zip', onlyIfSuccessful: true
                          ]
                 }
                 failure {
@@ -65,7 +65,7 @@ pipeline {
                          subject: 'Integration Test Failed',
                          body: 'Integration tests failed. Please review the attached report.',
                          attachments: [
-                             (filename: 'integration-test-report.zip', file: zip(workspaceGlob('**/*')))
+                             archiveArtifacts artifacts: '**/integration-test-report.zip'
                          ]
                 }
             }
