@@ -40,17 +40,17 @@ pipeline {
                 sh 'echo "artifacts file" > generatedFile.txt'
                 sleep 10
             }
-        }
-        post {
-            always {
-                archiveArtifacts artifacts: 'generatedFile.txt', onlyIfSuccessful: true
-                emailext attachLog: true, attachmentPattern: 'generatedFile.txt',
-                    body: 'Test successful',
-                    subject: 'Test Status Email',
-                    to: "chokforze@gmail.com"
+            post {
+                always {
+                    archiveArtifacts artifacts: 'generatedFile.txt', onlyIfSuccessful: true
+
+                    emailext attachLog: true, attachmentPattern: 'generatedFile.txt',
+                        body: 'Test successful',
+                        subject: 'Test Status Email',
+                        to: "chokforze@gmail.com"
+                }
             }
         }
-        
         stage('Deploy to Production') {
             steps {
                 echo 'deploy the application to a production server'
