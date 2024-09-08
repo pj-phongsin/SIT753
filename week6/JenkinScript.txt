@@ -47,7 +47,7 @@ pipeline {
                     emailext attachLog: true, attachmentsPattern: 'generatedFile.txt',
                         body: 'Test successful',
                         subject: 'Test Status Email',
-                        to: "chokforze@gmail.com"
+                        mail to: "chokforze@gmail.com"
                 }
             }
         }
