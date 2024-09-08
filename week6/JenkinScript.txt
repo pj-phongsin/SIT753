@@ -29,7 +29,7 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
+                    to: 'chokforze@gmail.com',
                     subject: 'Security Scan Status Email',
                     body: 'Security scan successful',
                     to 'my-log-channel'
@@ -43,7 +43,7 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
+                    to: 'chokforze@gmail.com',
                     subject: 'Test Status Email',
                     body: 'Test successful',
                     to 'my-log-channel'
