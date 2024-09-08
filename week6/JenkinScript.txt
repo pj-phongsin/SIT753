@@ -29,7 +29,7 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
+                    emailext to: 'chokforze@gmail.com',
                     subject: 'Security Scan Status Email',
                     body: 'Security scan successful',
                     attachLog: true
@@ -43,7 +43,7 @@ pipeline {
             }
             post {
                 success {
-                    mail to: 'chokforze@gmail.com',
+                    emailext to: 'chokforze@gmail.com',
                     subject: 'Test Status Email',
                     body: 'Test successful', 
                     attachLog: true
