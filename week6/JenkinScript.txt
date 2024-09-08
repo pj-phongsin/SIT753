@@ -27,14 +27,6 @@ pipeline {
             steps {
                 echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
             }
-            post {
-                success {
-                    emailext to: 'chokforze@gmail.com',
-                    subject: 'Security Scan Status Email',
-                    body: 'Security scan successful',
-                    attachLog: true
-                }
-            }
         }
         stage('Integration Tests on Staging') {
             steps {
