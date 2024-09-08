@@ -35,10 +35,12 @@ pipeline {
             }
             post {
                 success {
-                    emailext to: 'chokforze@gmail.com',
+                    emailext (
+                    to: 'chokforze@gmail.com',
                     subject: 'Test Status Email',
                     body: 'Test successful', 
                     attachLog: true
+                    )
                 }
             }
         }
