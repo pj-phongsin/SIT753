@@ -29,12 +29,10 @@ pipeline {
             }
             post {
                 success {
-                    emailaction(
-                    to: 'chokforze@gmail.com',
+                    mail to: 'chokforze@gmail.com',
                     subject: 'Security Scan Status Email',
                     body: 'Security scan successful',
-                    mail (to: 'my-log-channel')
-                    )
+                    attachLog: true
                 }
             }
         }
@@ -45,12 +43,10 @@ pipeline {
             }
             post {
                 success {
-                    emailaction(
-                    to: 'chokforze@gmail.com',
+                    mail to: 'chokforze@gmail.com',
                     subject: 'Test Status Email',
-                    body: 'Test successful',
-                    mail (to: 'my-log-channel')
-                    )
+                    body: 'Test successful', 
+                    attachLog: true
                 }
             }
         }
