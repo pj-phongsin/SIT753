@@ -44,7 +44,7 @@ pipeline {
                 always {
                     archiveArtifacts artifacts: 'generatedFile.txt', onlyIfSuccessful: true
 
-                    emailext attachLog: true, attachmentPattern: 'generatedFile.txt',
+                    emailext attachLog: true, attachmentsPattern: 'generatedFile.txt',
                         body: 'Test successful',
                         subject: 'Test Status Email',
                         to: "chokforze@gmail.com"
