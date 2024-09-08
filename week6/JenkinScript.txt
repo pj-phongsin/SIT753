@@ -31,23 +31,22 @@ pipeline {
                 success {
                     mail to: 'chokforze@gmail.com',
                     subject: 'Security Scan Status Email',
-                    body: 'Security scan successful'
+                    body: 'Security scan successful',
+                    attachLog: true
                 }
             }
         }
         stage('Integration Tests on Staging') {
             steps {
-                sh 'echo "artifacts file" > generatedFile.txt'
+                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
                 sleep 10
             }
             post {
-                always {
-                    archiveArtifacts artifacts: 'generatedFile.txt', onlyIfSuccessful: true
-
-                    emailext attachLog: true, attachmentsPattern: 'generatedFile.txt',
-                        body: 'Test successful',
-                        subject: 'Test Status Email',
-                        mail to: 'chokforze@gmail.com'
+                success {
+                    mail to: 'chokforze@gmail.com',
+                    subject: 'Test Status Email',
+                    body: 'Test successful',
+                    attachLog: true
                 }
             }
         }
