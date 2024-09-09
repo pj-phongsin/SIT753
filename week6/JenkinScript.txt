@@ -35,7 +35,7 @@ pipeline {
                         def status = currentBuild.currentResult
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
-                            SUBJECT: "Security Scan Build ${status}",
+                            subject: "Security Scan Build ${status}",
                             body: """Security scan completed with status: ${status}. And the build log attached.""",
                             attachLog: true
                         )
