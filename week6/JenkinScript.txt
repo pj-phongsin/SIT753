@@ -1,33 +1,23 @@
 pipeline {
     agent any
-    
     environment {
-        DIRECTORY_PATH = "/path/to/code/directory"
-        TESTING_ENVIRONMENT = "PJ Testing ENV"
-        STAGING_ENVIRONMENT = "PJ Staging ENV"
-        PRODUCTION_ENVIRONMENT = "PJ Production- ENV"
+        DIRECTORY_PATH = "/path/project/testcode"
+        TESTING_ENVIRONMENT = "PJTestingEnv"
+        STAGING_ENVIRONMENT = "PJStagingEnv"
+        PRODUCTION_ENVIRONMENT = "PJProdEnv"
         EMAIL_RECIPIENT = "chokforze@gmail.com"
     }
-
     stages {
-        stage('Build') {
+        stage("Build") {
             steps {
-                echo 'Build the code using a build automation tool.'
+                echo "Building the code using Maven"
             }
         }
-        stage('Unit and Integration Tests') {
+        stage("Unit and Integration Tests") {
             steps {
-                echo 'Run unit tests to ensure the code functions as expected and run integration tests'
-            }
-        }
-        stage('Code Analysis') {
-            steps {
-                echo 'Integrate a code analysis tool to analyse the code and ensure it meets industry standards.'
-            }
-        }
-        stage('Security Scan') {
-            steps {
-                echo 'Perform a security scan on the code using a tool to identify any vulnerabilities.'
+                echo "Running unit tests"
+                echo "Running integration tests"
+
             }
             post {
                 always {
@@ -35,23 +25,23 @@ pipeline {
                         def status = currentBuild.currentResult
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
-                            subject: "Security Scan Build ${status}",
-                            body: """Security scan completed with status: ${status}. And the build log attached.""",
+                            subject: "Unit and Integration Tests - Build ${status}",
+                            body: """Unit and Integration Tests have completed with status: ${status}. 
+                            The build logs attached in this email.""",
                             attachLog: true
                         )
                     }
                 }
             }
         }
-        stage('Integration Tests on Staging') {
+        stage("Code Analysis") {
             steps {
-                echo 'Run integration tests on the staging environment to ensure the application functions as expected in a production-like environment'
-                sleep 10
+                echo "Analyzing code quality"
             }
         }
-        stage('Deploy to Production') {
+        stage("Security Scan") {
             steps {
-                echo 'deploy the application to a production server'
+                echo "Performing security scan"
             }
             post {
                 always {
@@ -59,8 +49,38 @@ pipeline {
                         def status = currentBuild.currentResult
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
-                            subject: "Deployment to Production Build ${status}",
-                            body: """The deplowment to production completed with status: ${status} And the build log attached.""",
+                            subject: "Security Scan - Build ${status}",
+                            body: """Security Scan has completed with status: ${status}. 
+                            The build logs attached in this email.""",
+                            attachLog: true
+                        )
+                    }
+                }
+            }
+        }
+        stage("Deploy to Staging") {
+            steps {
+                echo "Deploying the application to staging environment: ${env.STAGING_ENVIRONMENT}"
+            }
+        }
+        stage("Integration Tests on Staging") {
+            steps {
+                echo "Running integration tests on the staging environment"
+            }
+        }
+        stage("Deploy to Production") {
+            steps {
+                echo "Deploying the application to the production environment: ${env.PRODUCTION_ENVIRONMENT}"
+            }
+            post {
+                always {
+                    script {
+                        def status = currentBuild.currentResult
+                        emailext (
+                            to: "${env.EMAIL_RECIPIENT}",
+                            subject: "Deployment to Production - Build ${status}",
+                            body: """The deployment to production has completed with status: ${status}
+                                    The build logs attached in this email.""",
                             attachLog: true
                         )
                     }
