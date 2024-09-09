@@ -5,7 +5,7 @@ pipeline {
         DIRECTORY_PATH = "/path/to/code/directory"
         TESTING_ENVIRONMENT = "PJ Testing ENV"
         PRODUCTION_ENVIRONMENT = "PJ Production- ENV"
-        EMAIL_RECIPIENT = "chokforze@gmail.com
+        EMAIL_RECIPIENT = "chokforze@gmail.com"
     }
 
     stages {
