@@ -58,8 +58,8 @@ pipeline {
                         def status = currentBuild.currentResult
                         emailext (
                             to: "${env.EMAIL_RECIPIENT}",
-                            subject: "Deployment to Production Build $ {status}",
-                            body: """The deplowment to production completed with status: $ {status} And the build log attached.""",
+                            subject: "Deployment to Production Build ${status}",
+                            body: """The deplowment to production completed with status: ${status} And the build log attached.""",
                             attachLog: true
                         )
                     }
